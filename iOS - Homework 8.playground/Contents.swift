@@ -79,11 +79,13 @@ class OrbitonSpaceStation {
     var controlCenter: ControlCenter
     var researchLab: ResearchLab
     var lifeSupportSystem: LifeSupportSystem
+
     let controlCenterDrone: Drone
     let researchLabDrone: Drone
     let lifeSupportSystemDrone: Drone
-    
-    init(controlCenter: ControlCenter, researchLab: ResearchLab, lifeSupportSystem: LifeSupportSystem, controlCenterDrone: Drone, researchLabDrone: Drone, lifeSupportSystemDrone: Drone) {
+
+    init(controlCenter: ControlCenter, researchLab: ResearchLab, lifeSupportSystem: LifeSupportSystem,
+         controlCenterDrone: Drone, researchLabDrone: Drone, lifeSupportSystemDrone: Drone) {
         self.controlCenter = controlCenter
         self.researchLab = researchLab
         self.lifeSupportSystem = lifeSupportSystem
@@ -92,12 +94,14 @@ class OrbitonSpaceStation {
         self.lifeSupportSystemDrone = lifeSupportSystemDrone
     }
 
-        func lockDownControlCenter(password: String) {
-            if controlCenter.isLockedDown == false && password == controlCenter.securityCode {controlCenter.lockDown(password: password)
-                
-            }
+    func lockDownControlCenter(password: String) {
+        if controlCenter.isLockedDown == false && password == controlCenter.securityCode {
+            controlCenter.lockDown(password: password)
         }
     }
+}
+        
+    
 
 class MissionControl {
     var spaceStation: OrbitonSpaceStation?
@@ -129,3 +133,30 @@ class MissionControl {
 }
 
 
+let spaceStation = OrbitonSpaceStation(
+    controlCenter: controlCenter,
+    researchLab: researchLab,
+    lifeSupportSystem: lifeSupportSystem,
+    controlCenterDrone: controlCenterDrone,
+    researchLabDrone: researchLabDrone,
+    lifeSupportSystemDrone: lifeSupportSystemDrone
+)
+
+let missionControl = MissionControl()
+missionControl.connectToOrbitonSpaceStation(spaceStation: spaceStation)
+
+let controlCenter = ControlCenter(isLockedDown: false, securityCode: "5238", moduleName: "Control Center", drone: nil)
+let researchLab = ResearchLab(samples: [], moduleName: "Research Lab", drone: nil)
+let lifeSupportSystem = LifeSupportSystem(OxygenLevel: 100, moduleName: "Life Support System", drone: nil)
+
+let controlCenterDrone = Drone(task: "perform security check", assignedModule: controlCenter)
+let researchLabDrone = Drone(task: "collect samples", assignedModule: researchLab)
+let lifeSupportSystemDrone = Drone(task: "control oxygen level", assignedModule: lifeSupportSystem)
+
+
+
+missionControl.requestControlCenterStatus()
+
+missionControl.requestOxygenStatus()
+
+missionControl.requestDroneStatus()
